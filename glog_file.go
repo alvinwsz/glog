@@ -21,6 +21,7 @@ package glog
 import (
 	"flag"
 	"fmt"
+	//"github.com/alvinwsz/flag"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -109,10 +110,12 @@ func create(t time.Time) (f *os.File, filename string, err error) {
 	var lastErr error
 	fname := filepath.Join(logDir, name)
 	f, err = os.Create(fname)
+	fmt.Println("file created: ", fname, "  f= ", f, "  err=", err)
 	if err == nil {
 		symlink := filepath.Join(logDir, link)
 		os.Remove(symlink)        // ignore err
 		os.Symlink(name, symlink) // ignore err
+		fmt.Println("symlink created: ", symlink)
 		return f, fname, nil
 	}
 	lastErr = err

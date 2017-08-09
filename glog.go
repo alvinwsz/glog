@@ -76,6 +76,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	//"github.com/alvinwsz/flag"
 	"io"
 	//stdLog "log"
 	"os"
@@ -731,7 +732,9 @@ func (sb *syncBuffer) Sync() error {
 
 func (sb *syncBuffer) Write(p []byte) (n int, err error) {
 	if sb.logger.log_daily {
-		if strings.Compare(sb.createAt, string(p[0:4])) == 0 {
+		if sb.createAt != string(p[0:4]) {
+			fmt.Println("Create at: ", sb.createAt)
+			fmt.Println("Write data: ", string(p[0:4]))
 			if err := sb.rotateFile(time.Now()); err != nil {
 				sb.logger.exit(err)
 			}
@@ -751,6 +754,7 @@ func (sb *syncBuffer) Write(p []byte) (n int, err error) {
 
 // rotateFile closes the syncBuffer's file and starts a new one.
 func (sb *syncBuffer) rotateFile(now time.Time) error {
+	fmt.Printf("Log file created at: %s\n", now.Format("2006/01/02 15:04:05"))
 	if sb.file != nil {
 		sb.Flush()
 		sb.file.Close()
